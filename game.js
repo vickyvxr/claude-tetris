@@ -169,7 +169,7 @@ function drawBlock(context, x, y, colorIndex, size, alpha) {
 }
 
 function drawGrid() {
-  ctx.strokeStyle = '#22222e';
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim();
   ctx.lineWidth = 0.5;
   for (let c = 1; c < COLS; c++) {
     ctx.beginPath();
@@ -300,5 +300,18 @@ document.addEventListener('keydown', e => {
 });
 
 restartBtn.addEventListener('click', init);
+
+const themeBtn = document.getElementById('theme-toggle');
+themeBtn.addEventListener('click', () => {
+  const root = document.documentElement;
+  const light = root.dataset.theme !== 'light';
+  if (light) root.dataset.theme = 'light';
+  else delete root.dataset.theme;
+  themeBtn.textContent = light ? '🌙' : '☀️';
+  themeBtn.setAttribute('aria-label', light ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro');
+  themeBtn.blur(); // evita que Espacio/Enter reactive el botón
+  draw();
+  drawNext();
+});
 
 init();
